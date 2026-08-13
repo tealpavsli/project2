@@ -1,0 +1,14 @@
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\bin\Debug\net10.0\CSharpProject.exe
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\bin\Debug\net10.0\CSharpProject.deps.json
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\bin\Debug\net10.0\CSharpProject.runtimeconfig.json
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\bin\Debug\net10.0\CSharpProject.dll
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\bin\Debug\net10.0\CSharpProject.pdb
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.AssemblyInfoInputs.cache
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.AssemblyInfo.cs
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.csproj.CoreCompileInputs.cache
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.dll
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\refint\CSharpProject.dll
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.pdb
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\CSharpProject.genruntimeconfig.cache
+C:\Users\p.slizhevskiy\Desktop\CSharpProject\obj\Debug\net10.0\ref\CSharpProject.dll
