@@ -4,7 +4,19 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<div class="game-container">
+@if (!HasEnteredName)
+{
+    <div class="name-entry-overlay">
+        <div class="name-entry-box">
+            <h2>Введите имя</h2>
+            <input @bind="PlayerNameInput" @bind:event="oninput" placeholder="Ваше имя" maxlength="30" />
+            <button @onclick="ConfirmName" disabled="@string.IsNullOrWhiteSpace(PlayerNameInput)">Играть</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="game-container">
     <canvas id="gameCanvas" style="touch-action:none;"></canvas>
     <div class="score-overlay">
         <span>Счёт: @Score</span>
@@ -33,6 +45,8 @@
         </div>
     }
 </div>
+}
+
 
 <div class="score-overlay">
     <span>Счёт: @Score</span>
@@ -61,6 +75,20 @@
     private int Record;
     private bool IsGameOver;
     private int Lives = 5;
+    private bool HasEnteredName;
+    private string PlayerNameInput = "";
+    private string PlayerName = "";
+    private int LoadedRecord;
+
+    private async Task ConfirmName()
+    {
+        if (string.IsNullOrWhiteSpace(PlayerNameInput)) return;
+
+        PlayerName = PlayerNameInput.Trim();
+        LoadedRecord = await JS.InvokeAsync<int>("firebaseInterop.getRecord", PlayerName);
+        HasEnteredName = true;
+        StateHasChanged();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -74,8 +102,9 @@
     public void OnFieldResized(double width, double height)
     {
         _session = new GameSession(width, height);
+        _session.SetInitialRecord(LoadedRecord);
         Score = 0;
-        Record = 0;
+        Record = LoadedRecord;
         Lives = 5;
         IsGameOver = false;
     }
@@ -121,7 +150,12 @@
         if (result == CollisionResult.Goal || result == CollisionResult.BottomLoss)
         {
             Score = _session.Score;
-            Record = _session.Record;
+            var newRecord = _session.Record;
+            if (newRecord > Record)
+            {
+                Record = newRecord;
+                _ = JS.InvokeVoidAsync("firebaseInterop.saveRecord", PlayerName, Record);
+            }
             Lives = _session.Lives;
 
             if (result == CollisionResult.Goal)

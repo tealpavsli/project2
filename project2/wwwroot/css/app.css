@@ -41,6 +41,51 @@
         content: "An error has occurred."
     }
 
+.name-entry-overlay {
+    position: fixed;
+    inset: 0;
+    background: #d8b98a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name-entry-box {
+    background: white;
+    border-radius: 12px;
+    padding: 32px 48px;
+    text-align: center;
+    font-family: sans-serif;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.name-entry-box input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 16px 0;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.name-entry-box button {
+    padding: 10px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.name-entry-box button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
 .loading-progress {
     position: absolute;
     display: block;

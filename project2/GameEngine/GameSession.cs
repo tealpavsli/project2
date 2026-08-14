@@ -103,6 +103,11 @@ public class GameSession
         State = GameState.WaitingToLaunch;
     }
 
+    public void SetInitialRecord(int record)
+    {
+        if (record > Record) Record = record;
+    }
+
     public void Restart()
     {
         Score = 0;
