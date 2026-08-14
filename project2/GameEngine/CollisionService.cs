@@ -62,6 +62,7 @@ public static class CollisionService
         // Нижняя граница — потеря жизни
         if (pos.Y + r >= field.Height)
         {
+            heart.Position = new Vector2(pos.X, field.Height - r);
             return CollisionResult.BottomLoss;
         }
 

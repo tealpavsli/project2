@@ -17,7 +17,7 @@ window.gameInterop = {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
 
-        this.resize();
+        this._applyResize();
         window.addEventListener('resize', () => this.resize());
 
         this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e));
@@ -28,28 +28,48 @@ window.gameInterop = {
     },
 
     resize: function () {
-        const rect = this.canvas.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+            // Дребезг: на мобильных resize срабатывает при скрытии/появлении адресной строки —
+            // откладываем реальный пересчёт, чтобы не пересоздавать игру на каждое такое "дрожание"
+            clearTimeout(this._resizeTimer);
+            this._resizeTimer = setTimeout(() => this._applyResize(), 200);
+        },
 
-        this.sideMargin = this.lastHeartDiameter * 1.5;
-        const maxSideMargin = rect.width * 0.35;
-        if (this.sideMargin > maxSideMargin) this.sideMargin = maxSideMargin;
+        _applyResize: function () {
+            const rect = this.canvas.getBoundingClientRect();
 
-        const playableWidth = Math.max(100, rect.width - this.sideMargin * 2);
+            // Игнорируем мелкие изменения (особенно по высоте) — это почти всегда
+            // адресная строка Safari, а не настоящий поворот экрана/ресайз окна
+            if (this._lastWidth !== undefined) {
+                const widthChanged = Math.abs(rect.width - this._lastWidth) > 5;
+                const heightChangedALot = Math.abs(rect.height - this._lastHeight) > 150;
+                if (!widthChanged && !heightChangedALot) {
+                    return;
+                }
+            }
+            this._lastWidth = rect.width;
+            this._lastHeight = rect.height;
 
-        const goalWidth = playableWidth * 0.25;
-        const goalDepth = goalWidth * 0.20;
-        const topTextSpace = Math.max(70, rect.height * 0.08);
-        const bottomTextSpace = Math.max(70, rect.height * 0.08);
+            this.canvas.width = rect.width;
+            this.canvas.height = rect.height;
 
-        this.topMargin = topTextSpace + goalDepth;
-        this.bottomMargin = bottomTextSpace;
+            this.sideMargin = this.lastHeartDiameter * 1.5;
+            const maxSideMargin = rect.width * 0.35;
+            if (this.sideMargin > maxSideMargin) this.sideMargin = maxSideMargin;
 
-        const playableHeight = Math.max(50, rect.height - this.topMargin - this.bottomMargin);
+            const playableWidth = Math.max(100, rect.width - this.sideMargin * 2);
 
-        this.dotNetRef.invokeMethodAsync('OnFieldResized', playableWidth, playableHeight);
-    },
+            const goalWidth = playableWidth * 0.25;
+            const goalDepth = goalWidth * 0.20;
+            const topTextSpace = Math.max(70, rect.height * 0.08);
+            const bottomTextSpace = Math.max(70, rect.height * 0.08);
+
+            this.topMargin = topTextSpace + goalDepth;
+            this.bottomMargin = bottomTextSpace;
+
+            const playableHeight = Math.max(50, rect.height - this.topMargin - this.bottomMargin);
+
+            this.dotNetRef.invokeMethodAsync('OnFieldResized', playableWidth, playableHeight);
+        },
 
     onPointerMove: function (e) {
         const rect = this.canvas.getBoundingClientRect();
