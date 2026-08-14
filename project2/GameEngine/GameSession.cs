@@ -13,8 +13,8 @@ public class GameSession
     public int Record { get; private set; }
     public int Lives { get; private set; } = 5;
 
-    private const double BaseSpeed = 900; // условных единиц/сек
-    public double CurrentSpeed { get; private set; } = BaseSpeed;
+    private readonly double BaseSpeed;
+    public double CurrentSpeed { get; private set; }
     public FieldColor CurrentFieldColor { get; private set; } = FieldColor.White;
     public BallSkin CurrentSkin { get; private set; } = BallSkin.RedHeart;
     private bool _touchedPaddleSinceLaunch;
@@ -26,6 +26,11 @@ public class GameSession
         Paddle = new Paddle(Field);
         Heart = new Heart(Paddle);
         Heart.AttachTo(Paddle);
+
+        // Скорость пропорциональна высоте поля — одинаковая сложность
+        // на любом экране, а не фиксированное число пикселей в секунду
+        BaseSpeed = Field.Height * 1.0;
+        CurrentSpeed = BaseSpeed;
     }
 
     public void MovePaddle(double x) => Paddle.MoveTo(x);
