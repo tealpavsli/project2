@@ -90,14 +90,20 @@ else
         StateHasChanged();
     }
 
+    private bool _jsInitialized;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender) return;
-
-        _selfRef = DotNetObjectReference.Create(this);
-        await JS.InvokeVoidAsync("gameInterop.init", _selfRef, "gameCanvas");
+        // Инициализируем JS только после того, как введено имя и canvas
+        // реально появился в DOM — не обязательно на самом первом рендере
+        if (HasEnteredName && !_jsInitialized)
+        {
+            _jsInitialized = true;
+            _selfRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("gameInterop.init", _selfRef, "gameCanvas");
+        }
     }
-
+    
     [JSInvokable]
     public void OnFieldResized(double width, double height)
     {
