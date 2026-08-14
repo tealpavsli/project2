@@ -103,7 +103,7 @@ else
             await JS.InvokeVoidAsync("gameInterop.init", _selfRef, "gameCanvas");
         }
     }
-    
+
     [JSInvokable]
     public void OnFieldResized(double width, double height)
     {
@@ -113,6 +113,7 @@ else
         Record = LoadedRecord;
         Lives = 5;
         IsGameOver = false;
+        InvokeAsync(StateHasChanged);
     }
 
     [JSInvokable]
