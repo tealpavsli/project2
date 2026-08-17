@@ -56,4 +56,20 @@ public class MessageProvider
             Messages[_rng.Next(Messages.Length)]
         };
     }
+
+    private static readonly string[] ConsolingMessages =
+    {
+        "Ничего страшного, попробуй ещё раз! 💪",
+        "Бывает, не переживай ❤️",
+        "Ты справишься, я знаю! ✨",
+        "Ещё одна попытка — и всё получится 🌟",
+        "Не сдавайся! ❤️",
+        "Ты можешь длашь, больше, комон эврибади!!!",
+        "П - поддержка)"
+    };
+
+    public string GetConsolingMessage()
+    {
+        return ConsolingMessages[_rng.Next(ConsolingMessages.Length)];
+    }
 }

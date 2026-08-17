@@ -37,7 +37,7 @@ else
 
         @if (ShowMessage)
     {
-        <div class="message-overlay">
+        <div class="message-overlay @(IsConsolingMessage ? "consoling" : "")">
             @foreach (var msg in CurrentMessages)
             {
                 <div class="message-line">@msg</div>
@@ -70,6 +70,7 @@ else
     private readonly MessageProvider _messageProvider = new(new Random());
     private List<string> CurrentMessages = new();
     private bool ShowMessage;
+    private bool IsConsolingMessage;
 
     private int Score;
     private int Record;
@@ -169,6 +170,13 @@ else
             {
                 CurrentMessages = _messageProvider.GetNext();
                 ShowMessage = true;
+                IsConsolingMessage = false;
+            }
+            else if (result == CollisionResult.BottomLoss && _session.State != GameState.GameOver)
+            {
+                CurrentMessages = new List<string> { _messageProvider.GetConsolingMessage() };
+                ShowMessage = true;
+                IsConsolingMessage = true;
             }
 
             if (_session.State == GameState.GameOver)
