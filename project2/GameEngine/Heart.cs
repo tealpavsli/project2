@@ -11,7 +11,7 @@ public class Heart
 
     public Heart(Paddle paddle)
     {
-        Radius = paddle.Width * 0.30 / 2; // "30% ширины ракетки" — это диаметр
+        Radius = paddle.BaseWidthForBall * 0.30 / 2; // фиксированный размер, не зависит от текущего размера ракетки
     }
 
     public void AttachTo(Paddle paddle)

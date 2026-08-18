@@ -8,6 +8,7 @@ public class Paddle
     public double SizeMultiplier { get; private set; } = 1.75;
 
     public double Width => _baseWidth * SizeMultiplier;
+    public double BaseWidthForBall => _baseWidth;
     public double Height { get; }
     public double CenterX { get; private set; }
 
