@@ -74,6 +74,7 @@ public class GameSession
                 Score++;
                 if (Score > Record) Record = Score;
                 CurrentSpeed *= 1.05;
+                Paddle.ShrinkAfterGoal();
                 PauseForMessage();
                 break;
 
@@ -113,10 +114,10 @@ public class GameSession
         Score = 0;
         Lives = 5;
         CurrentSpeed = BaseSpeed;
+        Paddle.ResetSize();
         Heart.AttachTo(Paddle);
         State = GameState.WaitingToLaunch;
     }
-
     public bool SetSkin(BallSkin skin)
     {
         if (State != GameState.WaitingToLaunch) return false;

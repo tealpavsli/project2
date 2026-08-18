@@ -2,17 +2,44 @@ namespace project2.GameEngine;
 
 public class Paddle
 {
-    public double CenterX { get; private set; }
-    public double Width { get; }
-    public double Height { get; }
     private readonly Field _field;
+    private readonly double _baseWidth;
+
+    public double SizeMultiplier { get; private set; } = 1.75;
+
+    public double Width => _baseWidth * SizeMultiplier;
+    public double Height { get; }
+    public double CenterX { get; private set; }
 
     public Paddle(Field field)
     {
         _field = field;
-        Width = field.Width * WidthRatioFor(field.Width);
+        _baseWidth = field.Width * WidthRatioFor(field.Width);
         Height = field.Height * 0.02;
         CenterX = field.Width / 2;
+    }
+
+    public double Y => _field.Height - Height - _field.Height * 0.03;
+
+    public void MoveTo(double x)
+    {
+        var half = Width / 2;
+        CenterX = Math.Clamp(x, half, _field.Width - half);
+    }
+
+    public double Left => CenterX - Width / 2;
+    public double Right => CenterX + Width / 2;
+
+    // Вызывается после каждого гола — ракетка постепенно сужается
+    public void ShrinkAfterGoal()
+    {
+        SizeMultiplier *= 0.99;
+    }
+
+    // Вызывается только при полном рестарте игры (Restart), не при потере жизни
+    public void ResetSize()
+    {
+        SizeMultiplier = 1.75;
     }
 
     // На узких мобильных экранах ракетка (и мяч, как % от неё) визуально крупнее,
@@ -30,14 +57,4 @@ public class Paddle
         var t = (fieldWidth - mobileFieldWidth) / (desktopFieldWidth - mobileFieldWidth);
         return mobileRatio + t * (desktopRatio - mobileRatio);
     }
-
-    public double Y => _field.Height - Height - _field.Height * 0.03; // зазор ~3% от высоты поля
-    public void MoveTo(double x)
-    {
-        var half = Width / 2;
-        CenterX = Math.Clamp(x, half, _field.Width - half);
-    }
-
-    public double Left => CenterX - Width / 2;
-    public double Right => CenterX + Width / 2;
 }
