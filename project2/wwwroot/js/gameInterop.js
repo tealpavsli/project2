@@ -259,7 +259,19 @@ window.gameInterop = {
             const rectX = centerX - iconSize / 2;
             const rectY = cy - iconSize / 2;
 
-            this.skinIconRects.push({ x: rectX, y: rectY, w: iconSize, h: iconSize, skin: i });
+            const hitPadding = 6; // отступ от края экрана и от игрового поля
+            const hitLeft = hitPadding;
+            const hitRight = this.sideMargin - hitPadding;
+            const hitTop = cy - iconSize / 2 - gap / 2;
+            const hitBottom = cy + iconSize / 2 + gap / 2;
+
+            this.skinIconRects.push({
+                x: hitLeft,
+                y: hitTop,
+                w: Math.max(iconSize, hitRight - hitLeft),
+                h: hitBottom - hitTop,
+                skin: i
+            });
 
             // подсветка выбранной иконки
             if (state.skin === i) {
@@ -303,8 +315,20 @@ window.gameInterop = {
             const rectX = centerX - iconSize / 2;
             const rectY = cy - iconSize / 2;
 
-            this.colorIconRects.push({ x: rectX, y: rectY, w: iconSize, h: iconSize, color: i });
+            const hitPadding = 6;
+            const hitLeft = centerX - this.sideMargin / 2 + hitPadding; // левая граница правой панели
+            const hitRight = this.canvas.width - hitPadding;
+            const hitTop = cy - iconSize / 2 - gap / 2;
+            const hitBottom = cy + iconSize / 2 + gap / 2;
 
+            this.colorIconRects.push({
+                x: hitLeft,
+                y: hitTop,
+                w: hitRight - hitLeft,
+                h: hitBottom - hitTop,
+                color: i
+            });
+            
             if (state.fieldColor === i) {
                 ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
                 ctx.beginPath();
