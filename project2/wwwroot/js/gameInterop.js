@@ -61,7 +61,7 @@ window.gameInterop = {
             const goalWidth = playableWidth * 0.25;
             const goalDepth = goalWidth * 0.20;
             const topTextSpace = Math.max(70, rect.height * 0.08);
-            const bottomTextSpace = Math.max(70, rect.height * 0.08);
+            const bottomTextSpace = Math.max(100, rect.height * 0.13);
 
             this.topMargin = topTextSpace + goalDepth;
             this.bottomMargin = bottomTextSpace;

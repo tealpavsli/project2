@@ -108,12 +108,39 @@ else
     [JSInvokable]
     public void OnFieldResized(double width, double height)
     {
-        _session = new GameSession(width, height);
-        _session.SetInitialRecord(LoadedRecord);
-        Score = 0;
-        Record = LoadedRecord;
-        Lives = 5;
-        IsGameOver = false;
+        if (_session is null)
+        {
+            // Самая первая инициализация — обычный старт
+            _session = new GameSession(width, height);
+            _session.SetInitialRecord(LoadedRecord);
+            Score = 0;
+            Record = LoadedRecord;
+            Lives = 5;
+            IsGameOver = false;
+        }
+        else
+        {
+            // Повторный ресайз (например, поворот экрана) — переносим прогресс,
+            // а не начинаем игру заново
+            var savedScore = _session.Score;
+            var savedLives = _session.Lives;
+            var savedRecord = _session.Record;
+            var savedSkin = _session.CurrentSkin;
+            var savedColor = _session.CurrentFieldColor;
+            var savedSpeedRatio = _session.CurrentSpeed / _session.BaseSpeed;
+            var savedSizeMultiplier = _session.Paddle.SizeMultiplier;
+            var wasGameOver = _session.State == GameState.GameOver;
+
+            _session = new GameSession(width, height);
+            _session.RestoreProgress(savedScore, savedLives, savedRecord, savedSpeedRatio,
+                savedSizeMultiplier, savedSkin, savedColor, wasGameOver);
+
+            Score = _session.Score;
+            Record = _session.Record;
+            Lives = _session.Lives;
+            IsGameOver = wasGameOver;
+        }
+
         InvokeAsync(StateHasChanged);
     }
 

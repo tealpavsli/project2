@@ -43,6 +43,11 @@ public class Paddle
         SizeMultiplier = 1.75;
     }
 
+    public void SetSizeMultiplier(double value)
+    {
+        SizeMultiplier = value;
+    }
+
     // На узких мобильных экранах ракетка (и мяч, как % от неё) визуально крупнее,
     // на широких десктопных полях — прежние 15%, поведение не меняется.
     private static double WidthRatioFor(double fieldWidth)

@@ -13,7 +13,7 @@ public class GameSession
     public int Record { get; private set; }
     public int Lives { get; private set; } = 5;
 
-    private readonly double BaseSpeed;
+    public double BaseSpeed { get; }
     public double CurrentSpeed { get; private set; }
     public FieldColor CurrentFieldColor { get; private set; } = FieldColor.White;
     public BallSkin CurrentSkin { get; private set; } = BallSkin.RedHeart;
@@ -117,6 +117,20 @@ public class GameSession
         Paddle.ResetSize();
         Heart.AttachTo(Paddle);
         State = GameState.WaitingToLaunch;
+    }
+
+    public void RestoreProgress(int score, int lives, int record, double speedRatio,
+    double paddleSizeMultiplier, BallSkin skin, FieldColor color, bool wasGameOver)
+    {
+        Score = score;
+        Lives = lives;
+        if (record > Record) Record = record;
+        CurrentSpeed = BaseSpeed * speedRatio;
+        Paddle.SetSizeMultiplier(paddleSizeMultiplier);
+        CurrentSkin = skin;
+        CurrentFieldColor = color;
+        Heart.AttachTo(Paddle);
+        State = wasGameOver ? GameState.GameOver : GameState.WaitingToLaunch;
     }
     public bool SetSkin(BallSkin skin)
     {
