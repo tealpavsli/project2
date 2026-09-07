@@ -54,17 +54,29 @@ public class MessageProvider
         "Ты восхитительна, как всегда ✨",
         "Ой кусна-кусна 🤪"
     };
+private static readonly string[] ConsolingMessages =
+    {
+        "Ничего страшного, попробуй ещё раз! 💪",
+        "Бывает, не переживай ❤️",
+        "Ты справишься, я знаю! ✨",
+        "Ещё одна попытка — и всё получится 🌟",
+        "Не сдавайся! ❤️",
+        "Всё в порядке, продолжай! 🔥"
+    };
 
     private readonly List<string> _unused = new(Messages);
     private readonly Random _rng;
+
+    private string? _lastGoalMessage;
+    private string? _lastConsolingMessage;
 
     public MessageProvider(Random rng)
     {
         _rng = rng;
     }
 
-    /// Возвращает 1 сообщение, пока есть неиспользованные,
-    /// после — по 2 случайных (с возможными повторами).
+    // Возвращает 1 сообщение, пока есть неиспользованные,
+    // после — по 2 случайных, но никогда не повторяя последнее показанное.
     public List<string> GetNext()
     {
         if (_unused.Count > 0)
@@ -72,30 +84,35 @@ public class MessageProvider
             var index = _rng.Next(_unused.Count);
             var message = _unused[index];
             _unused.RemoveAt(index);
+            _lastGoalMessage = message;
             return new List<string> { message };
         }
 
-        return new List<string>
-        {
-            Messages[_rng.Next(Messages.Length)],
-            Messages[_rng.Next(Messages.Length)]
-        };
+        var first = PickDifferent(Messages, _lastGoalMessage);
+        var second = PickDifferent(Messages, first);
+        _lastGoalMessage = second;
+        return new List<string> { first, second };
     }
 
-    private static readonly string[] ConsolingMessages =
-    {
-        "Ничего страшного, попробуй ещё раз! 💪",
-        "Бывает, не переживай ❤️",
-        "Ты справишься, я знаю! ✨",
-        "Ещё одна попытка — и всё получится 🌟",
-        "Не сдавайся! ❤️",
-        "Ты можешь длашь, больше, комон эврибади!!!",
-        "П - поддержка)",
-        "Зая ебашь 🤬"
-    };
-
+    // Возвращает подбадривающее сообщение при потере жизни,
+    // никогда не повторяя предыдущее показанное.
     public string GetConsolingMessage()
     {
-        return ConsolingMessages[_rng.Next(ConsolingMessages.Length)];
+        var message = PickDifferent(ConsolingMessages, _lastConsolingMessage);
+        _lastConsolingMessage = message;
+        return message;
+    }
+
+    private string PickDifferent(string[] pool, string? exclude)
+    {
+        if (pool.Length <= 1) return pool[0];
+
+        string candidate;
+        do
+        {
+            candidate = pool[_rng.Next(pool.Length)];
+        } while (candidate == exclude);
+
+        return candidate;
     }
 }

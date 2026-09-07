@@ -17,7 +17,6 @@ public class GameSession
     public double CurrentSpeed { get; private set; }
     public FieldColor CurrentFieldColor { get; private set; } = FieldColor.White;
     public BallSkin CurrentSkin { get; private set; } = BallSkin.RedHeart;
-    private bool _touchedPaddleSinceLaunch;
     private const double MinSpeedRatio = 0.5; // не даём скорости упасть ниже 50% от базовой
 
     public GameSession(double fieldWidth, double fieldHeight)
@@ -39,8 +38,6 @@ public class GameSession
     {
         if (State != GameState.WaitingToLaunch) return;
 
-        _touchedPaddleSinceLaunch = false;
-
         // Исключаем узкий диапазон около вертикали (-15..+15°),
         // чтобы сердечко не летело сразу в ворота, а уходило в стены —
         // тогда гол возможен только через осознанный отскок от ракетки.
@@ -61,12 +58,7 @@ public class GameSession
         if (State != GameState.Playing) return CollisionResult.None;
 
         Heart.Position = Heart.Position + Heart.Velocity * dtSeconds;
-        var result = CollisionService.Resolve(Heart, Paddle, Field, allowGoal: _touchedPaddleSinceLaunch);
-
-        if (result == CollisionResult.PaddleBounce)
-        {
-            _touchedPaddleSinceLaunch = true;
-        }
+        var result = CollisionService.Resolve(Heart, Paddle, Field);
 
         switch (result)
         {
