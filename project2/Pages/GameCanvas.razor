@@ -44,6 +44,16 @@ else
             }
         </div>
     }
+
+        @if (ShowGoalAnimation)
+    {
+        <div class="goal-animation-overlay">
+            @foreach (var piece in ConfettiPieces)
+            {
+                <div class="confetti-piece" style="@piece.Style"></div>
+            }
+        </div>
+    }
 </div>
 }
 
@@ -71,6 +81,35 @@ else
     private List<string> CurrentMessages = new();
     private bool ShowMessage;
     private bool IsConsolingMessage;
+    private bool ShowGoalAnimation;
+    private List<ConfettiPiece> ConfettiPieces = new();
+
+    private class ConfettiPiece
+    {
+        public string Style { get; set; } = "";
+    }
+
+    private static readonly string[] ConfettiColors =
+    {
+        "#ef4444", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7", "#ec4899"
+    };
+
+    private void GenerateConfetti()
+    {
+        ConfettiPieces.Clear();
+        for (var i = 0; i < 1311; i++)
+        {
+            var left = _rng.NextDouble() * 100;
+            var color = ConfettiColors[_rng.Next(ConfettiColors.Length)];
+            var duration = 2.0 + _rng.NextDouble() * 1.2;
+            var delay = _rng.NextDouble() * 0.4;
+            var style = $"left:{left.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}%;" +
+                        $"background:{color};" +
+                        $"animation-duration:{duration.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}s;" +
+                        $"animation-delay:{delay.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}s;";
+            ConfettiPieces.Add(new ConfettiPiece { Style = style });
+        }
+    }
 
     private int Score;
     private int Record;
@@ -129,11 +168,12 @@ else
             var savedColor = _session.CurrentFieldColor;
             var savedSpeedRatio = _session.CurrentSpeed / _session.BaseSpeed;
             var savedSizeMultiplier = _session.Paddle.SizeMultiplier;
+            var savedTotalGoals = _session.TotalGoals;
             var wasGameOver = _session.State == GameState.GameOver;
 
             _session = new GameSession(width, height);
             _session.RestoreProgress(savedScore, savedLives, savedRecord, savedSpeedRatio,
-                savedSizeMultiplier, savedSkin, savedColor, wasGameOver);
+                savedSizeMultiplier, savedSkin, savedColor, wasGameOver, savedTotalGoals);
 
             Score = _session.Score;
             Record = _session.Record;
@@ -195,9 +235,18 @@ else
 
             if (result == CollisionResult.Goal)
             {
-                CurrentMessages = _messageProvider.GetNext();
-                ShowMessage = true;
-                IsConsolingMessage = false;
+                if (_session.TotalGoals % 5 == 0)
+                {
+                    GenerateConfetti();
+                    ShowGoalAnimation = true;
+                    ShowMessage = false;
+                }
+                else
+                {
+                    CurrentMessages = _messageProvider.GetNext();
+                    ShowMessage = true;
+                    IsConsolingMessage = false;
+                }
             }
             else if (result == CollisionResult.BottomLoss && _session.State != GameState.GameOver)
             {
@@ -210,6 +259,7 @@ else
             {
                 IsGameOver = true;
                 ShowMessage = false;
+                ShowGoalAnimation = false;
             }
             else
             {
@@ -255,6 +305,7 @@ else
     {
         await Task.Delay(3500);
         ShowMessage = false;
+        ShowGoalAnimation = false;
         _session?.ResetForNextAttempt();
         await InvokeAsync(StateHasChanged);
     }

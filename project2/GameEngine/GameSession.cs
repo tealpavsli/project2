@@ -12,6 +12,7 @@ public class GameSession
     public int Score { get; private set; }
     public int Record { get; private set; }
     public int Lives { get; private set; } = 5;
+    public int TotalGoals { get; private set; }
 
     public double BaseSpeed { get; }
     public double CurrentSpeed { get; private set; }
@@ -64,6 +65,7 @@ public class GameSession
         {
             case CollisionResult.Goal:
                 Score++;
+                TotalGoals++;
                 if (Score > Record) Record = Score;
                 CurrentSpeed *= 1.05;
                 Paddle.ShrinkAfterGoal();
@@ -104,6 +106,7 @@ public class GameSession
     public void Restart()
     {
         Score = 0;
+        TotalGoals = 0;
         Lives = 5;
         CurrentSpeed = BaseSpeed;
         Paddle.ResetSize();
@@ -112,10 +115,11 @@ public class GameSession
     }
 
     public void RestoreProgress(int score, int lives, int record, double speedRatio,
-    double paddleSizeMultiplier, BallSkin skin, FieldColor color, bool wasGameOver)
+    double paddleSizeMultiplier, BallSkin skin, FieldColor color, bool wasGameOver, int totalGoals = 0)
     {
         Score = score;
         Lives = lives;
+        TotalGoals = totalGoals;
         if (record > Record) Record = record;
         CurrentSpeed = BaseSpeed * speedRatio;
         Paddle.SetSizeMultiplier(paddleSizeMultiplier);
