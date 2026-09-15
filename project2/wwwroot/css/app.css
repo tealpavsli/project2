@@ -285,3 +285,59 @@ html, body {
     color: #1e293b;
     text-shadow: 0 0 4px white, 0 0 4px white;
 }
+
+.clap-hand-wrap {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(60px, 15vw, 160px);
+    pointer-events: none;
+    z-index: 50;
+    line-height: 1;
+}
+
+.clap-hand-wrap-left {
+    left: calc(50% - 14vw);
+}
+
+.clap-hand-wrap-right {
+    right: calc(50% - 14vw);
+}
+
+.clap-hand-left {
+    display: inline-block;
+    opacity: 0;
+    animation: clapCenterLeft 2.8s ease-in-out;
+}
+
+.clap-hand-right {
+    display: inline-block;
+    opacity: 0;
+    animation: clapCenterRight 2.8s ease-in-out;
+}
+
+@keyframes clapCenterLeft {
+    0%   { opacity: 0; transform: translateX(0); }
+    8%   { opacity: 1; transform: translateX(0); }
+    20%  { transform: translateX(6vw); }
+    32%  { transform: translateX(0); }
+    44%  { transform: translateX(6vw); }
+    56%  { transform: translateX(0); }
+    68%  { transform: translateX(6vw); }
+    80%  { transform: translateX(0); }
+    90%  { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(0); }
+}
+
+@keyframes clapCenterRight {
+    0%   { opacity: 0; transform: translateX(0) scaleX(-1); }
+    8%   { opacity: 1; transform: translateX(0) scaleX(-1); }
+    20%  { transform: translateX(-6vw) scaleX(-1); }
+    32%  { transform: translateX(0) scaleX(-1); }
+    44%  { transform: translateX(-6vw) scaleX(-1); }
+    56%  { transform: translateX(0) scaleX(-1); }
+    68%  { transform: translateX(-6vw) scaleX(-1); }
+    80%  { transform: translateX(0) scaleX(-1); }
+    90%  { opacity: 1; transform: translateX(0) scaleX(-1); }
+    100% { opacity: 0; transform: translateX(0) scaleX(-1); }
+}

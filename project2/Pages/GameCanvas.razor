@@ -48,9 +48,21 @@ else
         @if (ShowGoalAnimation)
     {
         <div class="goal-animation-overlay">
-            @foreach (var piece in ConfettiPieces)
+            @if (GoalAnimationType == "confetti")
             {
-                <div class="confetti-piece" style="@piece.Style"></div>
+                @foreach (var piece in ConfettiPieces)
+                {
+                    <div class="confetti-piece" style="@piece.Style"></div>
+                }
+            }
+            else if (GoalAnimationType == "clapping")
+            {
+                <div class="clap-hand-wrap clap-hand-wrap-left">
+                    <span class="clap-hand clap-hand-left">🤚</span>
+                </div>
+                <div class="clap-hand-wrap clap-hand-wrap-right">
+                    <span class="clap-hand clap-hand-right">🤚</span>
+                </div>
             }
         </div>
     }
@@ -82,6 +94,22 @@ else
     private bool ShowMessage;
     private bool IsConsolingMessage;
     private bool ShowGoalAnimation;
+    private string GoalAnimationType = "";
+    private string? _lastAnimationType;
+    private static readonly string[] AvailableAnimations = { "confetti", "clapping" };
+
+    private string PickDifferentAnimation()
+    {
+        if (AvailableAnimations.Length <= 1) return AvailableAnimations[0];
+
+        string candidate;
+        do
+        {
+            candidate = AvailableAnimations[_rng.Next(AvailableAnimations.Length)];
+        } while (candidate == _lastAnimationType);
+
+        return candidate;
+    }
     private List<ConfettiPiece> ConfettiPieces = new();
 
     private class ConfettiPiece
@@ -233,11 +261,16 @@ else
             }
             Lives = _session.Lives;
 
-            if (result == CollisionResult.Goal)
+                        if (result == CollisionResult.Goal)
             {
                 if (_session.TotalGoals % 5 == 0)
                 {
-                    GenerateConfetti();
+                    GoalAnimationType = PickDifferentAnimation();
+                    _lastAnimationType = GoalAnimationType;
+                    if (GoalAnimationType == "confetti")
+                    {
+                        GenerateConfetti();
+                    }
                     ShowGoalAnimation = true;
                     ShowMessage = false;
                 }
