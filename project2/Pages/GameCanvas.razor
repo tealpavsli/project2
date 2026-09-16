@@ -77,6 +77,21 @@ else
                     <div class="thumbsup-text">ВО!</div>
                 </div>
             }
+            else if (GoalAnimationType == "podium")
+            {
+                <div class="podium-wrap">
+                    <div class="podium-stand podium-2">
+                        <div class="podium-number">2</div>
+                    </div>
+                    <div class="podium-stand podium-1">
+                        <span class="podium-figure">🙋</span>
+                        <div class="podium-number">1</div>
+                    </div>
+                    <div class="podium-stand podium-3">
+                        <div class="podium-number">3</div>
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
@@ -109,7 +124,7 @@ else
     private bool ShowGoalAnimation;
     private string GoalAnimationType = "";
     private int _animationIndex;
-    private static readonly string[] AvailableAnimations = { "confetti", "clapping", "trophy", "thumbsup" };
+    private static readonly string[] AvailableAnimations = { "confetti", "clapping", "trophy", "thumbsup", "podium" };
     private string NextAnimationInSequence()
     {
         var animation = AvailableAnimations[_animationIndex % AvailableAnimations.Length];
