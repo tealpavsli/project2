@@ -77,19 +77,34 @@ else
                     <div class="thumbsup-text">ВО!</div>
                 </div>
             }
-            else if (GoalAnimationType == "podium")
+                        else if (GoalAnimationType == "podium")
             {
                 <div class="podium-wrap">
-                    <div class="podium-stand podium-2">
-                        <div class="podium-number">2</div>
-                    </div>
-                    <div class="podium-stand podium-1">
-                        <span class="podium-figure">🙋</span>
-                        <div class="podium-number">1</div>
-                    </div>
-                    <div class="podium-stand podium-3">
-                        <div class="podium-number">3</div>
-                    </div>
+                    <span class="podium-figure">🙋</span>
+                    <svg class="podium-svg" viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="podiumGold" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#ffe066" />
+                                <stop offset="100%" stop-color="#c9910b" />
+                            </linearGradient>
+                            <linearGradient id="podiumSilver" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#eeeeee" />
+                                <stop offset="100%" stop-color="#9a9a9a" />
+                            </linearGradient>
+                            <linearGradient id="podiumBronze" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#e0a878" />
+                                <stop offset="100%" stop-color="#8f5423" />
+                            </linearGradient>
+                        </defs>
+
+                        <rect x="0" y="70" width="95" height="90" fill="url(#podiumSilver)" stroke="#1e293b" stroke-width="2" />
+                        <rect x="205" y="95" width="95" height="65" fill="url(#podiumBronze)" stroke="#1e293b" stroke-width="2" />
+                        <rect x="95" y="30" width="110" height="130" fill="url(#podiumGold)" stroke="#1e293b" stroke-width="2" />
+
+                        <text x="47" y="130" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="34" fill="#ffffff">2</text>
+                        <text x="252" y="140" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="34" fill="#ffffff">3</text>
+                        <text x="150" y="100" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="38" fill="#ffffff">1</text>
+                    </svg>
                 </div>
             }
         </div>
