@@ -64,6 +64,12 @@ else
                     <span class="clap-hand clap-hand-right">🤚</span>
                 </div>
             }
+            else if (GoalAnimationType == "trophy")
+            {
+                <div class="trophy-wrap">
+                    <span class="trophy-icon">🏆</span>
+                </div>
+            }
         </div>
     }
 </div>
@@ -95,20 +101,13 @@ else
     private bool IsConsolingMessage;
     private bool ShowGoalAnimation;
     private string GoalAnimationType = "";
-    private string? _lastAnimationType;
-    private static readonly string[] AvailableAnimations = { "confetti", "clapping" };
-
-    private string PickDifferentAnimation()
+    private int _animationIndex;
+    private static readonly string[] AvailableAnimations = { "confetti", "clapping", "trophy" };
+    private string NextAnimationInSequence()
     {
-        if (AvailableAnimations.Length <= 1) return AvailableAnimations[0];
-
-        string candidate;
-        do
-        {
-            candidate = AvailableAnimations[_rng.Next(AvailableAnimations.Length)];
-        } while (candidate == _lastAnimationType);
-
-        return candidate;
+        var animation = AvailableAnimations[_animationIndex % AvailableAnimations.Length];
+        _animationIndex++;
+        return animation;
     }
     private List<ConfettiPiece> ConfettiPieces = new();
 
@@ -265,8 +264,7 @@ else
             {
                 if (_session.TotalGoals % 5 == 0)
                 {
-                    GoalAnimationType = PickDifferentAnimation();
-                    _lastAnimationType = GoalAnimationType;
+                    GoalAnimationType = NextAnimationInSequence();
                     if (GoalAnimationType == "confetti")
                     {
                         GenerateConfetti();
@@ -331,6 +329,7 @@ else
         Score = 0;
         Lives = 5;
         IsGameOver = false;
+        _animationIndex = 0;
         StateHasChanged();
     }
 
