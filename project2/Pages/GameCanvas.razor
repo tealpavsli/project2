@@ -70,6 +70,13 @@ else
                     <span class="trophy-icon">🏆</span>
                 </div>
             }
+            else if (GoalAnimationType == "thumbsup")
+            {
+                <div class="thumbsup-wrap">
+                    <span class="thumbsup-icon">👍</span>
+                    <div class="thumbsup-text">ВО!</div>
+                </div>
+            }
         </div>
     }
 </div>
@@ -102,7 +109,7 @@ else
     private bool ShowGoalAnimation;
     private string GoalAnimationType = "";
     private int _animationIndex;
-    private static readonly string[] AvailableAnimations = { "confetti", "clapping", "trophy" };
+    private static readonly string[] AvailableAnimations = { "confetti", "clapping", "trophy", "thumbsup" };
     private string NextAnimationInSequence()
     {
         var animation = AvailableAnimations[_animationIndex % AvailableAnimations.Length];
