@@ -74,6 +74,13 @@ private static readonly string[] ConsolingMessages =
     {
         _rng = rng;
     }
+    public void Reset()
+    {
+        _unused.Clear();
+        _unused.AddRange(Messages);
+        _lastGoalMessage = null;
+        _lastConsolingMessage = null;
+    }
 
     // Возвращает 1 сообщение, пока есть неиспользованные,
     // после — по 2 случайных, но никогда не повторяя последнее показанное.

@@ -409,8 +409,8 @@ html, body {
 .podium-wrap {
     position: fixed;
     left: 50%;
-    bottom: 6vh;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 50;
     opacity: 0;
@@ -418,10 +418,10 @@ html, body {
 }
 
 @keyframes podiumFadeIn {
-    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
-    15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+    0%   { opacity: 0; transform: translate(-50%, -50%) translateY(40px); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    85%  { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) translateY(0); }
 }
 
 .podium-svg {
