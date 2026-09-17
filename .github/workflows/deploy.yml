@@ -2,7 +2,7 @@ name: Deploy Blazor to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, test ]
 
 permissions:
   contents: read
@@ -13,23 +13,49 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-src
+
+      - name: Checkout test
+        uses: actions/checkout@v4
+        with:
+          ref: test
+          path: test-src
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      - name: Publish
-        run: dotnet publish project2/project2.csproj -c Release -o release
+      - name: Publish main
+        run: dotnet publish main-src/project2/project2.csproj -c Release -o release-main
+
+      - name: Publish test
+        run: dotnet publish test-src/project2/project2.csproj -c Release -o release-test
+
+      - name: Fix base href for main
+        run: sed -i 's#<base href="/" />#<base href="/project2/" />#' release-main/wwwroot/index.html
+
+      - name: Fix base href for test preview
+        run: sed -i 's#<base href="/" />#<base href="/project2/test-preview/" />#' release-test/wwwroot/index.html
+
+      - name: Assemble combined site
+        run: |
+          mkdir -p combined
+          cp -r release-main/wwwroot/. combined/
+          mkdir -p combined/test-preview
+          cp -r release-test/wwwroot/. combined/test-preview/
 
       - name: Add .nojekyll
-        run: touch release/wwwroot/.nojekyll
+        run: touch combined/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: release/wwwroot
+          path: combined
 
       - name: Deploy to GitHub Pages
         id: deployment
